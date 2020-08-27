@@ -1,6 +1,6 @@
 import os
 from django.db import models
-from django.core.validators import RegexValidator
+from django.core.validators import RegexValidator, MaxValueValidator
 from django.contrib.auth import get_user_model
 
 User = get_user_model()
@@ -8,9 +8,9 @@ User = get_user_model()
 
 class NewsTypeModel(models.Model):
     class Meta:
-        db_table = 'news_type'
+        db_table = 'newstype'
 
-    news_type = models.CharField(max_length=30)
+    type = models.CharField(max_length=30)
 
 
 class TagModel(models.Model):
@@ -34,8 +34,6 @@ class TypeModel(models.Model):
     type_name = models.CharField(max_length=30)
 
 
-
-
 class ProfileModel(models.Model):
     class Meta:
         db_table = 'profile'
@@ -54,7 +52,7 @@ class PlaceModel(models.Model):
     address = models.CharField(max_length=50)
     contacts = models.CharField(max_length=70)
     statistic_views = models.IntegerField(default=0)
-    type = models.ForeignKey(TypeModel, related_name='place', on_delete=models.CASCADE)
+    type = models.ForeignKey(TypeModel, related_name='place', on_delete=models.SET_NULL, null=True)
     passed_moderation = models.BooleanField(default=False)
     email = models.EmailField(max_length=30, unique=True)
     owner_id = models.ForeignKey(ProfileModel, related_name='owned_places', on_delete=models.CASCADE)
@@ -64,11 +62,11 @@ class PlaceModel(models.Model):
 
 class PyiachokModel(models.Model):
     class Meta:
-        db_model = 'pyiachok'
+        db_table = 'pyiachok'
 
     date = models.DateTimeField()
     purpose = models.CharField(max_length=150)
-    sex = models.CharField(validators=[RegexValidator('^([fma])$', 'only f/m/a')])
+    sex = models.CharField(max_length=1, validators=[RegexValidator('^([fma])$', 'only f/m/a')])
     number_of_people = models.IntegerField()
     payer = models.CharField(max_length=20)
     expenditures = models.IntegerField()
@@ -118,8 +116,8 @@ class CoordinatesModel(models.Model):
     class Meta:
         db_table = 'coordinates'
 
-    lat = models.CharField(blank=False)
-    lng = models.CharField(blank=False)
+    lat = models.CharField(blank=False, max_length=20)
+    lng = models.CharField(blank=False, max_length=20)
     place = models.OneToOneField(PlaceModel, on_delete=models.CASCADE, related_name='coordinates')
 
 
@@ -127,20 +125,20 @@ class ScheduleModel(models.Model):
     class Meta:
         db_table = 'schedule'
 
-    mon_open = models.CharField(validators=[RegexValidator('^(([0-1]{0,1}[0-9])|(2[0-3])):[0-5]{0,1}[0-9]$')])
-    mon_close = models.CharField(validators=[RegexValidator('^(([0-1]{0,1}[0-9])|(2[0-3])):[0-5]{0,1}[0-9]$')])
-    tue_open = models.CharField(validators=[RegexValidator('^(([0-1]{0,1}[0-9])|(2[0-3])):[0-5]{0,1}[0-9]$')])
-    tue_close = models.CharField(validators=[RegexValidator('^(([0-1]{0,1}[0-9])|(2[0-3])):[0-5]{0,1}[0-9]$')])
-    wed_open = models.CharField(validators=[RegexValidator('^(([0-1]{0,1}[0-9])|(2[0-3])):[0-5]{0,1}[0-9]$')])
-    wed_close = models.CharField(validators=[RegexValidator('^(([0-1]{0,1}[0-9])|(2[0-3])):[0-5]{0,1}[0-9]$')])
-    thu_open = models.CharField(validators=[RegexValidator('^(([0-1]{0,1}[0-9])|(2[0-3])):[0-5]{0,1}[0-9]$')])
-    thu_close = models.CharField(validators=[RegexValidator('^(([0-1]{0,1}[0-9])|(2[0-3])):[0-5]{0,1}[0-9]$')])
-    fri_open = models.CharField(validators=[RegexValidator('^(([0-1]{0,1}[0-9])|(2[0-3])):[0-5]{0,1}[0-9]$')])
-    fri_close = models.CharField(validators=[RegexValidator('^(([0-1]{0,1}[0-9])|(2[0-3])):[0-5]{0,1}[0-9]$')])
-    sat_open = models.CharField(validators=[RegexValidator('^(([0-1]{0,1}[0-9])|(2[0-3])):[0-5]{0,1}[0-9]$')])
-    sat_close = models.CharField(validators=[RegexValidator('^(([0-1]{0,1}[0-9])|(2[0-3])):[0-5]{0,1}[0-9]$')])
-    sun_open = models.CharField(validators=[RegexValidator('^(([0-1]{0,1}[0-9])|(2[0-3])):[0-5]{0,1}[0-9]$')])
-    sun_close = models.CharField(validators=[RegexValidator('^(([0-1]{0,1}[0-9])|(2[0-3])):[0-5]{0,1}[0-9]$')])
+    mon_open = models.CharField(max_length=20, validators=[RegexValidator('^(([0-1]{0,1}[0-9])|(2[0-3])):[0-5]{0,1}[0-9]$')])
+    mon_close = models.CharField(max_length=20, validators=[RegexValidator('^(([0-1]{0,1}[0-9])|(2[0-3])):[0-5]{0,1}[0-9]$')])
+    tue_open = models.CharField(max_length=20, validators=[RegexValidator('^(([0-1]{0,1}[0-9])|(2[0-3])):[0-5]{0,1}[0-9]$')])
+    tue_close = models.CharField(max_length=20, validators=[RegexValidator('^(([0-1]{0,1}[0-9])|(2[0-3])):[0-5]{0,1}[0-9]$')])
+    wed_open = models.CharField(max_length=20, validators=[RegexValidator('^(([0-1]{0,1}[0-9])|(2[0-3])):[0-5]{0,1}[0-9]$')])
+    wed_close = models.CharField(max_length=20, validators=[RegexValidator('^(([0-1]{0,1}[0-9])|(2[0-3])):[0-5]{0,1}[0-9]$')])
+    thu_open = models.CharField(max_length=20, validators=[RegexValidator('^(([0-1]{0,1}[0-9])|(2[0-3])):[0-5]{0,1}[0-9]$')])
+    thu_close = models.CharField(max_length=20, validators=[RegexValidator('^(([0-1]{0,1}[0-9])|(2[0-3])):[0-5]{0,1}[0-9]$')])
+    fri_open = models.CharField(max_length=20, validators=[RegexValidator('^(([0-1]{0,1}[0-9])|(2[0-3])):[0-5]{0,1}[0-9]$')])
+    fri_close = models.CharField(max_length=20, validators=[RegexValidator('^(([0-1]{0,1}[0-9])|(2[0-3])):[0-5]{0,1}[0-9]$')])
+    sat_open = models.CharField(max_length=20, validators=[RegexValidator('^(([0-1]{0,1}[0-9])|(2[0-3])):[0-5]{0,1}[0-9]$')])
+    sat_close = models.CharField(max_length=20, validators=[RegexValidator('^(([0-1]{0,1}[0-9])|(2[0-3])):[0-5]{0,1}[0-9]$')])
+    sun_open = models.CharField(max_length=20, validators=[RegexValidator('^(([0-1]{0,1}[0-9])|(2[0-3])):[0-5]{0,1}[0-9]$')])
+    sun_close = models.CharField(max_length=20, validators=[RegexValidator('^(([0-1]{0,1}[0-9])|(2[0-3])):[0-5]{0,1}[0-9]$')])
     place = models.OneToOneField(PlaceModel, on_delete=models.CASCADE, related_name='schedule')
 
 
@@ -150,6 +148,6 @@ class CommentModel(models.Model):
 
     user = models.ForeignKey(ProfileModel, on_delete=models.CASCADE, related_name='comments')
     place = models.ForeignKey(PlaceModel, related_name='comments', on_delete=models.CASCADE)
-    rate = models.IntegerField(max_length=1)
+    rate = models.IntegerField(validators=[MaxValueValidator(10)])
     text = models.TextField(max_length=800)
     bill = models.IntegerField()
