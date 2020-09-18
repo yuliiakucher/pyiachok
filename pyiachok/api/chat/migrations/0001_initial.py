@@ -9,7 +9,7 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('user', '0001_initial'),
+        ('user_auth', '0001_initial'),
         ('event', '0001_initial'),
     ]
 
@@ -21,7 +21,7 @@ class Migration(migrations.Migration):
                 ('text', models.TextField(max_length=1000)),
                 ('date', models.DateTimeField(auto_now=True)),
                 ('pyiachok_id', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='chat_comments', to='event.pyiachokmodel')),
-                ('users', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='chat_comments', to='user.profilemodel')),
+                ('users', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='chat_comments', to='user_auth.profilemodel')),
             ],
             options={
                 'db_table': 'chat_comment',

@@ -22,7 +22,7 @@ User = get_user_model()
 class CreateProfileView(ModelViewSet):
     serializer_class = UserSerializer
     queryset = User.objects.all()
-    permission_classes = [IsAuthenticated]
+    # permission_classes = [IsAuthenticated]
 
     @classmethod
     def create(cls, request: Request, *args, **kwargs):

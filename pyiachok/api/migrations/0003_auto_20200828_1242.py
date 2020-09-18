@@ -16,7 +16,7 @@ class Migration(migrations.Migration):
         ),
         migrations.RemoveField(
             model_name='commentmodel',
-            name='user',
+            name='user_auth',
         ),
         migrations.RemoveField(
             model_name='coordinatesmodel',
@@ -64,7 +64,7 @@ class Migration(migrations.Migration):
         ),
         migrations.RemoveField(
             model_name='profilemodel',
-            name='user',
+            name='user_auth',
         ),
         migrations.RemoveField(
             model_name='pyiachokmodel',

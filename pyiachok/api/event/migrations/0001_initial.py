@@ -10,7 +10,7 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('user', '0001_initial'),
+        ('user_auth', '0001_initial'),
         ('place', '0001_initial'),
     ]
 
@@ -26,9 +26,9 @@ class Migration(migrations.Migration):
                 ('payer', models.CharField(max_length=20)),
                 ('expenditures', models.IntegerField()),
                 ('public', models.BooleanField(default=True)),
-                ('participants', models.ManyToManyField(related_name='active_pyiachky', to='user.ProfileModel')),
+                ('participants', models.ManyToManyField(related_name='active_pyiachky', to='user_auth.ProfileModel')),
                 ('place_id', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='pyiachky', to='place.placemodel')),
-                ('requests', models.ManyToManyField(related_name='pyiachok_requests', to='user.ProfileModel')),
+                ('requests', models.ManyToManyField(related_name='pyiachok_requests', to='user_auth.ProfileModel')),
             ],
             options={
                 'db_table': 'pyiachok',

@@ -8,7 +8,7 @@ class ProfileModel(models.Model):
     class Meta:
         db_table = 'profile'
 
-    photo = models.ImageField(upload_to=os.path.join('user', 'img'), default='')
+    photo = models.ImageField(upload_to=os.path.join('user_auth', 'img'), default='')
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
     sex = models.CharField(max_length=30)
 

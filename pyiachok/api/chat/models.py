@@ -1,7 +1,7 @@
 from django.db import models
 
 from ..event.models import PyiachokModel
-from ..user.models import ProfileModel
+from ..user_auth.models import ProfileModel
 
 
 class ChatCommentModel(models.Model):

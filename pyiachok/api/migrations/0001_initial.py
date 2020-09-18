@@ -45,7 +45,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('sex', models.CharField(max_length=30)),
-                ('user', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
+                ('user_auth', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
             ],
             options={
                 'db_table': 'profile',
@@ -211,7 +211,7 @@ class Migration(migrations.Migration):
                 ('text', models.TextField(max_length=800)),
                 ('bill', models.IntegerField()),
                 ('place', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='comments', to='api.placemodel')),
-                ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='comments', to='api.profilemodel')),
+                ('user_auth', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='comments', to='api.profilemodel')),
             ],
             options={
                 'db_table': 'comment',

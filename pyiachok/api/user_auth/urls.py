@@ -5,7 +5,7 @@ from .views import CreateProfileView
 from rest_framework.routers import DefaultRouter
 
 router = DefaultRouter()
-router.register(r'/create', CreateProfileView, basename='user')
+router.register(r'/create', CreateProfileView)
 urlpatterns = router.urls
 
 # urlpatterns = [

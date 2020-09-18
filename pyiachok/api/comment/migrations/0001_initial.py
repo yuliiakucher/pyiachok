@@ -10,7 +10,7 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('user', '0001_initial'),
+        ('user_auth', '0001_initial'),
         ('place', '0001_initial'),
     ]
 
@@ -23,7 +23,7 @@ class Migration(migrations.Migration):
                 ('text', models.TextField(max_length=800)),
                 ('bill', models.IntegerField()),
                 ('place', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='comments', to='place.placemodel')),
-                ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='comments', to='user.profilemodel')),
+                ('user_auth', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='comments', to='user_auth.profilemodel')),
             ],
             options={
                 'db_table': 'comment',

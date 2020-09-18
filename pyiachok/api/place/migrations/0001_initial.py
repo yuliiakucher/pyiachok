@@ -10,7 +10,7 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('user', '0001_initial'),
+        ('user_auth', '0001_initial'),
     ]
 
     operations = [
@@ -24,9 +24,9 @@ class Migration(migrations.Migration):
                 ('statistic_views', models.IntegerField(default=0)),
                 ('passed_moderation', models.BooleanField(default=False)),
                 ('email', models.EmailField(max_length=30, unique=True)),
-                ('admins', models.ManyToManyField(related_name='moderated_places', to='user.ProfileModel')),
-                ('fav', models.ManyToManyField(related_name='favourites_places', to='user.ProfileModel')),
-                ('owner_id', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='owned_places', to='user.profilemodel')),
+                ('admins', models.ManyToManyField(related_name='moderated_places', to='user_auth.ProfileModel')),
+                ('fav', models.ManyToManyField(related_name='favourites_places', to='user_auth.ProfileModel')),
+                ('owner_id', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='owned_places', to='user_auth.profilemodel')),
             ],
             options={
                 'db_table': 'place',
