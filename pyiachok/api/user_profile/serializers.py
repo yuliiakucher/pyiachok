@@ -1,21 +1,22 @@
 from rest_framework import serializers
-from ..user_auth.models import ProfileModel, User
+from ..models import ProfileModel, User
 from ..event.models import PyiachokModel
 from ..place.models import PlaceModel
-from django.contrib.auth import get_user_model
 
 
-
-
-
-class ProfileSerializer(serializers.ModelSerializer):
+class ShowProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProfileModel
-        fields = ('photo',)
+        fields = ('photo', 'owned_places')
+
+
+class EditProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ProfileModel
+        fields = ('photo', )
 
 
 class PyiachokSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = PyiachokModel
         fields = ('active_pyiachky',)
@@ -24,14 +25,26 @@ class PyiachokSerializer(serializers.ModelSerializer):
 class PlaceSerializer(serializers.ModelSerializer):
     class Meta:
         model = PlaceModel
-        fields = ('owned', 'favourites_places', 'moderated_places')
+        fields = ('favourites_places', 'moderated_places')
 
 
-class UserSerializer(serializers.ModelSerializer):
-    photo = ProfileSerializer(many=True)
-    pyiachky = PyiachokSerializer(many=True)
-    places = PlaceSerializer(many=True)
+class ShowUserSerializer(serializers.ModelSerializer):
+    profile = ShowProfileSerializer()
 
     class Meta:
         model = User
-        fields = ('first_name', 'last_name', 'username', 'email', 'photo', 'pyiachky', 'places')
+        fields = ('first_name', 'last_name', 'email', 'profile')
+
+
+class EditUserSerializer(serializers.ModelSerializer):
+    profile = EditProfileSerializer(required=False)
+
+    class Meta:
+        model = User
+        fields = ('first_name', 'last_name', 'email', 'profile',)
+        extra_kwargs = {'first_name': {'required': False},
+                        'last_name': {'required': False},
+                        'email': {'required': False},
+                        'profile': {'required': False},
+                        # 'password': {'required': False},
+                        }

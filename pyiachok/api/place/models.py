@@ -1,7 +1,7 @@
 import os
 from django.db import models
 from django.core.validators import RegexValidator
-from ..user_auth.models import ProfileModel
+from ..models import ProfileModel
 
 
 class TagModel(models.Model):

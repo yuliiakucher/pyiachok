@@ -1,41 +1,28 @@
-
-from rest_framework.request import Request
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated, BasePermission
-from rest_framework.viewsets import ModelViewSet
-from django.db import IntegrityError
-from .models import ProfileModel
-from .serializers import UserSerializer
+from rest_framework.views import APIView
+from ..models import ProfileModel
+from .serializers import UserAuthSerializer
 from django.contrib.auth import get_user_model
 
 User = get_user_model()
 
 
-# class CustomPermission(BasePermission):
-#     def has_permissions(self, request, view):
-#         if request.method == 'POST':
-#             return True
-#         else:
-#             return False
+class CreateProfileView(APIView):
+    serializer_class = UserAuthSerializer
 
-
-class CreateProfileView(ModelViewSet):
-    serializer_class = UserSerializer
-    queryset = User.objects.all()
-    # permission_classes = [IsAuthenticated]
-
-    @classmethod
-    def create(cls, request: Request, *args, **kwargs):
-        try:
-            candidate = User.objects.filter(username=request.data['username'])
-            if candidate:
-                return Response({'message': 'User with this email already exists, please try another!'})
-            user = User(username=request.data['username'], first_name=request.data['first_name'],
-                        last_name=request.data['last_name'])
-            profile = ProfileModel(user=user, sex=request.data['sex'])
-            user.set_password(request.data['password'])
-            user.save()
-            profile.save()
-            return Response({'message': 'Done'})
-        except IntegrityError as error:
-            return Response({'error': error})
+    @staticmethod
+    def post(request):
+        candidate_username = User.objects.filter(username=request.data['username'])
+        candidate_email = User.objects.filter(email=request.data['email'])
+        if candidate_username:
+            return Response({'message': 'User with this username already exists, please try another!'})
+        if candidate_email:
+            return Response({'message': 'User with this email already exists, please try another!'})
+        data = UserAuthSerializer(request.data).data
+        sex = data.pop('sex')
+        user = User(**data)
+        profile = ProfileModel(user=user, sex=sex)
+        user.set_password(request.data['password'])
+        user.save()
+        profile.save()
+        return Response({'message': 'Done'})

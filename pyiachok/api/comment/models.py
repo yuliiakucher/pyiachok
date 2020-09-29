@@ -1,6 +1,6 @@
 from django.db import models
 from django.core.validators import MaxValueValidator
-from ..user_auth.models import ProfileModel
+from ..models import ProfileModel
 from ..place.models import PlaceModel
 
 

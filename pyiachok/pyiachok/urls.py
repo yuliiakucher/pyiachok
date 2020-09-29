@@ -23,8 +23,8 @@ from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('user', include('api.user_auth.urls')),
-    path('test', include('api.user_profile.urls')),
+    path('', include('api.user_auth.urls')),
+    path('profile/', include('api.user_profile.urls')),
     path('token', TokenObtainPairView.as_view()),
     path('token/refresh', TokenRefreshView.as_view())
 ]+static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
