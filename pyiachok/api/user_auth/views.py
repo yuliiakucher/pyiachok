@@ -15,9 +15,9 @@ class CreateProfileView(APIView):
         candidate_username = User.objects.filter(username=request.data['username'])
         candidate_email = User.objects.filter(email=request.data['email'])
         if candidate_username:
-            return Response({'message': 'User with this username already exists, please try another!'})
+            return Response({'message': 'User with this username already exists, please try another!'}, 400)
         if candidate_email:
-            return Response({'message': 'User with this email already exists, please try another!'})
+            return Response({'message': 'User with this email already exists, please try another!'}, 400)
         data = UserAuthSerializer(request.data).data
         sex = data.pop('sex')
         user = User(**data)
@@ -25,4 +25,4 @@ class CreateProfileView(APIView):
         user.set_password(request.data['password'])
         user.save()
         profile.save()
-        return Response({'message': 'Done'})
+        return Response({'message': 'Done'}, 201)

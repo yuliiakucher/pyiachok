@@ -1,7 +1,7 @@
 import os
 from django.db import models
 from django.core.validators import RegexValidator
-from ..models import ProfileModel
+from ..models import ProfileModel, User
 
 
 class TagModel(models.Model):
@@ -47,7 +47,7 @@ class PlaceModel(models.Model):
     type = models.ForeignKey(TypeModel, related_name='place', on_delete=models.SET_NULL, null=True)
     passed_moderation = models.BooleanField(default=False)
     email = models.EmailField(max_length=30, unique=True)
-    owner_id = models.ForeignKey(ProfileModel, related_name='owned_places', on_delete=models.CASCADE)
+    owner_id = models.ForeignKey(User, related_name='owned_places', on_delete=models.CASCADE)
     fav = models.ManyToManyField(ProfileModel, related_name='favourites_places')
     admins = models.ManyToManyField(ProfileModel, related_name='moderated_places')
 

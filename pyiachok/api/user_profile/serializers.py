@@ -7,7 +7,7 @@ from ..place.models import PlaceModel
 class ShowProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProfileModel
-        fields = ('photo', 'owned_places')
+        fields = ('photo',)
 
 
 class EditProfileSerializer(serializers.ModelSerializer):
@@ -46,5 +46,4 @@ class EditUserSerializer(serializers.ModelSerializer):
                         'last_name': {'required': False},
                         'email': {'required': False},
                         'profile': {'required': False},
-                        # 'password': {'required': False},
                         }
