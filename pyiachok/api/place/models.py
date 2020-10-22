@@ -76,32 +76,12 @@ class ScheduleModel(models.Model):
     class Meta:
         db_table = 'schedule'
 
-    mon_open = models.CharField(max_length=20,
-                                validators=[RegexValidator('^(([0-1]{0,1}[0-9])|(2[0-3])):[0-5]{0,1}[0-9]$')])
-    mon_close = models.CharField(max_length=20,
-                                 validators=[RegexValidator('^(([0-1]{0,1}[0-9])|(2[0-3])):[0-5]{0,1}[0-9]$')])
-    tue_open = models.CharField(max_length=20,
-                                validators=[RegexValidator('^(([0-1]{0,1}[0-9])|(2[0-3])):[0-5]{0,1}[0-9]$')])
-    tue_close = models.CharField(max_length=20,
-                                 validators=[RegexValidator('^(([0-1]{0,1}[0-9])|(2[0-3])):[0-5]{0,1}[0-9]$')])
-    wed_open = models.CharField(max_length=20,
-                                validators=[RegexValidator('^(([0-1]{0,1}[0-9])|(2[0-3])):[0-5]{0,1}[0-9]$')])
-    wed_close = models.CharField(max_length=20,
-                                 validators=[RegexValidator('^(([0-1]{0,1}[0-9])|(2[0-3])):[0-5]{0,1}[0-9]$')])
-    thu_open = models.CharField(max_length=20,
-                                validators=[RegexValidator('^(([0-1]{0,1}[0-9])|(2[0-3])):[0-5]{0,1}[0-9]$')])
-    thu_close = models.CharField(max_length=20,
-                                 validators=[RegexValidator('^(([0-1]{0,1}[0-9])|(2[0-3])):[0-5]{0,1}[0-9]$')])
-    fri_open = models.CharField(max_length=20,
-                                validators=[RegexValidator('^(([0-1]{0,1}[0-9])|(2[0-3])):[0-5]{0,1}[0-9]$')])
-    fri_close = models.CharField(max_length=20,
-                                 validators=[RegexValidator('^(([0-1]{0,1}[0-9])|(2[0-3])):[0-5]{0,1}[0-9]$')])
-    sat_open = models.CharField(max_length=20,
-                                validators=[RegexValidator('^(([0-1]{0,1}[0-9])|(2[0-3])):[0-5]{0,1}[0-9]$')])
-    sat_close = models.CharField(max_length=20,
-                                 validators=[RegexValidator('^(([0-1]{0,1}[0-9])|(2[0-3])):[0-5]{0,1}[0-9]$')])
-    sun_open = models.CharField(max_length=20,
-                                validators=[RegexValidator('^(([0-1]{0,1}[0-9])|(2[0-3])):[0-5]{0,1}[0-9]$')])
-    sun_close = models.CharField(max_length=20,
-                                 validators=[RegexValidator('^(([0-1]{0,1}[0-9])|(2[0-3])):[0-5]{0,1}[0-9]$')])
+    monday = models.CharField(max_length=8)
+    tuesday = models.CharField(max_length=8)
+    wednesday = models.CharField(max_length=8)
+    thursday = models.CharField(max_length=8)
+    friday = models.CharField(max_length=8)
+    saturday = models.CharField(max_length=8)
+    sunday = models.CharField(max_length=8)
+
     place = models.OneToOneField(PlaceModel, on_delete=models.CASCADE, related_name='schedule')

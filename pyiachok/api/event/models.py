@@ -14,7 +14,5 @@ class PyiachokModel(models.Model):
     number_of_people = models.IntegerField()
     payer = models.CharField(max_length=20)
     expenditures = models.IntegerField()
-    public = models.BooleanField(default=True)
     participants = models.ManyToManyField(ProfileModel, related_name='active_pyiachky')
-    requests = models.ManyToManyField(ProfileModel, related_name='pyiachok_requests')
     place_id = models.ForeignKey(PlaceModel, on_delete=models.CASCADE, related_name='pyiachky')
