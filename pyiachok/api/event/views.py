@@ -11,12 +11,10 @@ class CreatePyiachokView(APIView):
 
     @staticmethod
     def post(request, pk):
-        print(request.data)
         serializer = CreatePyiachokSerializer(data=request.data)
         if not serializer.is_valid():
             return Response({'message': 'Укажите корректные данные'}, status=400)
         new_event = PyiachokModel.objects.create(**serializer.data, place_id_id=pk)
-        print(new_event.participants)
         new_event.participants.add(request.user)
         new_event.save()
         return Response({'message': 'Пиячок успешно создан'}, status=201)
