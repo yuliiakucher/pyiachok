@@ -1,3 +1,5 @@
+import os
+
 from django.db import models
 from django.core.validators import MaxValueValidator
 from ..models import ProfileModel
@@ -12,4 +14,4 @@ class CommentModel(models.Model):
     place = models.ForeignKey(PlaceModel, related_name='comments', on_delete=models.CASCADE)
     rate = models.IntegerField(validators=[MaxValueValidator(10)])
     text = models.TextField(max_length=800)
-    bill = models.IntegerField()
+    bill = models.ImageField(upload_to=os.path.join('comments', 'img'), default='')

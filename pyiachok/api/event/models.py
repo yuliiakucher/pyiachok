@@ -1,7 +1,7 @@
 from django.db import models
 from django.core.validators import RegexValidator
 from ..models import ProfileModel
-from ..place.models import PlaceModel
+from ..place.models import PlaceModel, User
 
 
 class PyiachokModel(models.Model):
@@ -14,5 +14,5 @@ class PyiachokModel(models.Model):
     number_of_people = models.IntegerField()
     payer = models.CharField(max_length=20)
     expenditures = models.IntegerField()
-    participants = models.ManyToManyField(ProfileModel, related_name='active_pyiachky')
+    participants = models.ManyToManyField(User, related_name='active_pyiachky')
     place_id = models.ForeignKey(PlaceModel, on_delete=models.CASCADE, related_name='pyiachky')

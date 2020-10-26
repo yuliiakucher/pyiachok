@@ -8,3 +8,8 @@ class CreatePyiachokSerializer(serializers.ModelSerializer):
         fields = ('date', 'purpose', 'sex', 'number_of_people', 'payer',
                   'expenditures')
 
+
+class ShowPyiachokSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PyiachokModel
+        exclude = ('place_id', )
