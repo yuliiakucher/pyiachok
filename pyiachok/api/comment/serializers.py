@@ -14,7 +14,7 @@ class CreateCommentSerializer(serializers.ModelSerializer):
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('first_name',)
+        fields = ('first_name', 'last_name')
 
 
 class ShowCommentSerializer(serializers.ModelSerializer):
@@ -22,12 +22,6 @@ class ShowCommentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = CommentModel
-        # fields = ('rate', 'text', 'bill',)
         exclude = ('id', 'place', )
 
-# class ShowCommentSerializer(serializers.ModelSerializer):
-#
-#         rate = serializers.IntegerField(max_length=30)
-#         text = serializers.CharField(max_length=30)
-#         bill = serializers.ImageField()
-#         first_name = serializers.CharField(max_length=30)
+

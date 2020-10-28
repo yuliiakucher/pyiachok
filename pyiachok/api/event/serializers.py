@@ -13,3 +13,4 @@ class ShowPyiachokSerializer(serializers.ModelSerializer):
     class Meta:
         model = PyiachokModel
         exclude = ('place_id', )
+

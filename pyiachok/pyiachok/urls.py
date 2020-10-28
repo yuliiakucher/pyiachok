@@ -28,6 +28,7 @@ urlpatterns = [
     path('place/', include('api.place.urls')),
     path('', include('api.event.urls')),
     path('', include('api.comment.urls')),
+    path('', include('api.chat.urls')),
     path('token', TokenObtainPairView.as_view()),
     path('token/refresh', TokenRefreshView.as_view())
 ]+static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
