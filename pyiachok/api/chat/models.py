@@ -12,3 +12,4 @@ class ChatCommentModel(models.Model):
     text = models.TextField(max_length=1000)
     date = models.DateTimeField(auto_now=True)
     pyiachok_id = models.ForeignKey(PyiachokModel, on_delete=models.CASCADE, related_name='chat_comments')
+    edited = models.BooleanField(default=False)

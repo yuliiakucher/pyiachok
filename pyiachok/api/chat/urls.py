@@ -1,7 +1,9 @@
 from django.urls import path
-from .views import CreateMessageView, ShowMessagesView
+
+from .views import CreateMessageView, ShowMessagesView, EditMessageView
 
 urlpatterns = [
-    path('place/<int:pk>/event/<int:sk>/add_msg/', CreateMessageView.as_view()),
-    path('place/<int:pk>/event/<int:sk>/show_msgs/', ShowMessagesView.as_view()),
+    path('event/<int:sk>/add-message/', CreateMessageView.as_view()),
+    path('event/<int:sk>/show-messages/', ShowMessagesView.as_view()),
+    path('chat-messages/<int:msg_id>/edit', EditMessageView.as_view()),
 ]

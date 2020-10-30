@@ -23,3 +23,9 @@ class ShowMessageSerializer(serializers.ModelSerializer):
     class Meta:
         model = ChatCommentModel
         exclude = ('pyiachok_id',)
+
+
+class EditMessageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ChatCommentModel
+        fields = ('text', 'edited')

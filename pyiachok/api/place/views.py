@@ -33,7 +33,7 @@ class ShowAllPlaces(APIView):
 class ShowPlaceView(APIView):
 
     @staticmethod
-    def get(pk):
+    def get(request, pk):
         place = PlaceModel.objects.get(id=pk)
         serializer = ShowPlaceSerializer(place)
         return Response(serializer.data)

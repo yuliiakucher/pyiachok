@@ -4,5 +4,5 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path('edit/', views.ProfileView.as_view())
+    path('profile/edit/', views.ProfileView.as_view())
 ]

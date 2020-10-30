@@ -1,7 +1,7 @@
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from .serializers import CreateMessageSerializer, ShowMessageSerializer
+from .serializers import CreateMessageSerializer, ShowMessageSerializer, EditMessageSerializer
 from .models import ChatCommentModel
 from ..event.models import PyiachokModel
 
@@ -30,3 +30,18 @@ class ShowMessagesView(APIView):
             return Response({'message': 'Укажите корректные данные'}, status=400)
         serializer = ShowMessageSerializer(messages, many=True)
         return Response(serializer.data, status=200)
+
+
+class EditMessageView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    @staticmethod
+    def patch(request, msg_id):
+        message = ChatCommentModel.objects.get(id=msg_id)
+        serializer = EditMessageSerializer(message, data=request.data)
+        if not serializer.is_valid():
+            return Response({'message': 'Укажите корректные данные'}, status=400)
+        message.edited = True
+        message.save()
+        serializer.save()
+        return Response({'message': 'Сообщение отредактировано'}, status=200)

@@ -41,7 +41,7 @@ class ShowPlaceSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = PlaceModel
-        fields = ('name', 'address', 'photos',
+        fields = ('id','name', 'address', 'photos',
                   'contacts', 'email',
                   'tags', 'specificities', 'type', 'schedule', 'coordinates')
         extra_kwargs = {'photos': {'required': False},
@@ -93,14 +93,21 @@ class CreatePlaceSerializer(serializers.ModelSerializer):
             if item['specificity_name'] not in new_specificities:
                 data = SpecificityModel.objects.create(**item)
                 instance.specificities.add(data)
+            else:
+                new_data = SpecificityModel.objects.get(specificity_name=item['specificity_name'])
+                instance.specificities.add(new_data)
+            # new_data = SpecificityModel.objects.get(specificity_name=item['specificity_name'])
+            # instance.specificities.add(new_data)
         for item in tags:
-            all_tags = TagModel.objects.all()
-            new_tags = []
-            for i in all_tags:
-                new_tags.append(i.tag_name)
-            if item['tag_name'] not in new_tags:
-                data = TagModel.objects.create(**item)
-                instance.tags.add(data)
+            # all_tags = TagModel.objects.all()
+            # new_tags = []
+            # for i in all_tags:
+            #     new_tags.append(i.tag_name)
+            # if item['tag_name'] not in new_tags:
+            #     data = TagModel.objects.create(**item)
+            #     instance.tags.add(data)
+            new_data = TagModel.objects.get(tag_name=item['tag_name'])
+            instance.tags.add(new_data)
         ScheduleModel.objects.create(**schedule, place_id=instance.id)
         CoordinatesModel.objects.create(**coordinates, place_id=instance.id)
         return instance
