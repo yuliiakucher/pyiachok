@@ -10,7 +10,7 @@ class CreateMessageView(APIView):
     permission_classes = [IsAuthenticated]
 
     @staticmethod
-    def post(request, pk, sk):
+    def post(request, sk):
         serializer = CreateMessageSerializer(data=request.data)
         event = PyiachokModel.objects.filter(id=sk).first()
         if not serializer.is_valid() or PyiachokModel.objects.filter(participants=request.user, id=sk).first() is None:
@@ -24,7 +24,7 @@ class ShowMessagesView(APIView):
     permission_classes = [IsAuthenticated]
 
     @staticmethod
-    def get(request, pk, sk):
+    def get(request, sk):
         messages = ChatCommentModel.objects.filter(pyiachok_id=sk)
         if PyiachokModel.objects.filter(participants=request.user, id=sk).first() is None:
             return Response({'message': 'Укажите корректные данные'}, status=400)
@@ -45,3 +45,15 @@ class EditMessageView(APIView):
         message.save()
         serializer.save()
         return Response({'message': 'Сообщение отредактировано'}, status=200)
+
+
+class DeleteMessageView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    @staticmethod
+    def delete(request, msg_id):
+        message = ChatCommentModel.objects.get(id=msg_id)
+        if not message or message.users_id != request.user.id:
+            return Response({'message': 'Укажите корректные данные'}, status=400)
+        message.delete()
+        return Response({'message': 'Сообщение удалено'}, status=200)
