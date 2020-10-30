@@ -79,12 +79,12 @@ class CreatePlaceSerializer(serializers.ModelSerializer):
         if exist:
             instance = PlaceModel.objects.create(owner_id_id=self.context['user'].id,
                                                  type=exist, **validated_data, )
-
+            instance.admins.add(self.context['user'])
         else:
             instance = PlaceModel.objects.create(owner_id_id=self.context['user'].id,
                                                  type=creating_type,
                                                  **validated_data)
-
+            instance.admins.add(self.context['user'])
         for item in specificities:
             all_specificities = SpecificityModel.objects.all()
             new_specificities = []

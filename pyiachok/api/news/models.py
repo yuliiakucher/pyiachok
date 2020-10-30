@@ -26,11 +26,3 @@ class NewsModel(models.Model):
     def __str__(self):
         return self.name
 
-
-class NewsDurationModel(models.Model):
-    class Meta:
-        db_table = 'news_duration'
-
-    date_start = models.DateTimeField()
-    date_end = models.DateTimeField()
-    news = models.OneToOneField(NewsModel, on_delete=models.CASCADE, related_name='duration')

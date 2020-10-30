@@ -3,7 +3,8 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.generics import ListAPIView
 from rest_framework.permissions import IsAuthenticated
-from ..models import ProfileModel, User
+from django.contrib.auth.models import User
+from ..models import ProfileModel
 from .models import PlaceModel, TagModel, SpecificityModel, TypeModel
 from .serializers import ShowPlaceSerializer, CreatePlaceSerializer, TagSerializer, TypeSerializer, \
     SpecificitiesSerializer
@@ -18,6 +19,7 @@ class CreatePlaceView(APIView):
         if not data.is_valid():
             return Response({'message': 'Укажите корректные данные'}, status=400)
         data.save()
+
         return Response({'message': 'Заявка на создание заведения успешно сформирована'}, status=201)
 
 
@@ -51,3 +53,19 @@ class AllAdditionalInfoView(APIView):
         type_model = TypeModel.objects.all()
         type = TypeSerializer(type_model, many=True)
         return Response({'tags': tags.data, 'spec': spec.data, 'type': type.data})
+
+
+class AddAdminView(APIView):
+    """"place/place_id/add-admin"""
+    permission_classes = [IsAuthenticated]
+
+    @staticmethod
+    def put(request, place_id):
+        place = PlaceModel.objects.get(id=place_id)
+        admin = User.objects.get(email=request.data['email'])
+        if not place or not admin:
+            return Response({'message': 'Укажите корректные данные'}, status=400)
+        place.admins.add(admin)
+
+        place.save()
+        return Response({'message': 'Админ успешно добавлен'}, status=200)

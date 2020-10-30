@@ -48,8 +48,8 @@ class PlaceModel(models.Model):
     passed_moderation = models.BooleanField(default=False)
     email = models.EmailField(max_length=30, unique=True)
     owner_id = models.ForeignKey(User, related_name='owned_places', on_delete=models.CASCADE)
-    fav = models.ManyToManyField(ProfileModel, related_name='favourites_places')
-    admins = models.ManyToManyField(ProfileModel, related_name='moderated_places')
+    fav = models.ManyToManyField(User, related_name='favourites_places')
+    admins = models.ManyToManyField(User, related_name='moderated_places')
 
     def __str__(self):
         return self.name
