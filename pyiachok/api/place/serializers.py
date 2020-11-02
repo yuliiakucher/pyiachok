@@ -43,7 +43,7 @@ class ShowPlaceSerializer(serializers.ModelSerializer):
         model = PlaceModel
         fields = ('id','name', 'address', 'photos',
                   'contacts', 'email',
-                  'tags', 'specificities', 'type', 'schedule', 'coordinates')
+                  'tags', 'specificities', 'type', 'schedule', 'coordinates', 'statistic_views')
         extra_kwargs = {'photos': {'required': False},
                         'schedule': {'required': False},
                         'coordinates': {'required': False},

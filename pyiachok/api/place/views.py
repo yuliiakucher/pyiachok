@@ -24,9 +24,15 @@ class CreatePlaceView(APIView):
 
 
 class ShowAllPlaces(APIView):
-
+    """place/all"""
     @staticmethod
-    def get(self):
+    def get(request):
+
+        tag = request.query_params.get('tag', None)
+        if tag:
+            filtered_places = PlaceModel.objects.filter(tags__tag_name=tag).all()
+            filtered_serializer = ShowPlaceSerializer(filtered_places, many=True)
+            return Response(filtered_serializer.data)
         places = PlaceModel.objects.all()
         serializer = ShowPlaceSerializer(places, many=True)
         return Response(serializer.data)
@@ -38,6 +44,8 @@ class ShowPlaceView(APIView):
     def get(request, pk):
         place = PlaceModel.objects.get(id=pk)
         serializer = ShowPlaceSerializer(place)
+        place.statistic_views += 1
+        place.save()
         return Response(serializer.data)
 
 
@@ -70,3 +78,5 @@ class AddAdminView(APIView):
 
         place.save()
         return Response({'message': 'Админ успешно добавлен'}, status=200)
+
+

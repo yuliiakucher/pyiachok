@@ -40,3 +40,12 @@ class ShowPyiachokView(APIView):
         event.participants.add(user)
         event.save()
         return Response({'message': f'пользователь {user.username} добавлен в пиячок'}, status=200)
+
+
+class ShowAllPyiachokView(APIView):
+    """event/all"""
+    @staticmethod
+    def get(request):
+        pyiachoks = PyiachokModel.objects.all()
+        serialiser = ShowPyiachokSerializer(pyiachoks, many=True)
+        return Response(serialiser.data)
