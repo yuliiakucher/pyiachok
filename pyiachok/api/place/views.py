@@ -63,7 +63,8 @@ class AddAdminView(APIView):
     def put(request, place_id):
         place = PlaceModel.objects.get(id=place_id)
         admin = User.objects.get(email=request.data['email'])
-        if not place or not admin:
+        owner = PlaceModel.objects.filter(id=place_id, owner_id_id=request.user.id).first()
+        if not place or not admin or owner is None:
             return Response({'message': 'Укажите корректные данные'}, status=400)
         place.admins.add(admin)
 
