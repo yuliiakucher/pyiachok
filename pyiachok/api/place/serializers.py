@@ -41,13 +41,29 @@ class ShowPlaceSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = PlaceModel
-        fields = ('id','name', 'address', 'photos',
+        fields = ('id', 'name', 'address', 'photos',
                   'contacts', 'email',
                   'tags', 'specificities', 'type', 'schedule', 'coordinates', 'statistic_views')
         extra_kwargs = {'photos': {'required': False},
                         'schedule': {'required': False},
                         'coordinates': {'required': False},
                         }
+
+
+class EditPlaceSerializer(serializers.ModelSerializer):
+    type = TypeSerializer(required=False)
+    schedule = ScheduleSerializer(required=False)
+    coordinates = CoordinatesSerializer(required=False)
+
+    class Meta:
+        model = PlaceModel
+        fields = ('name', 'email', 'address', 'contacts', 'type', 'schedule', 'coordinates')
+        extra_kwargs = {
+            'name': {'required': False},
+            'email': {'required': False},
+            'address': {'required': False},
+            'contacts': {'required': False},
+            }
 
 
 class CreatePlaceSerializer(serializers.ModelSerializer):
@@ -68,7 +84,6 @@ class CreatePlaceSerializer(serializers.ModelSerializer):
                         }
 
     def create(self, validated_data):
-
         type = validated_data.pop('type')
         specificities = validated_data.pop('specificities', [])
         tags = validated_data.pop('tags', [])
@@ -96,18 +111,19 @@ class CreatePlaceSerializer(serializers.ModelSerializer):
             else:
                 new_data = SpecificityModel.objects.get(specificity_name=item['specificity_name'])
                 instance.specificities.add(new_data)
-            # new_data = SpecificityModel.objects.get(specificity_name=item['specificity_name'])
-            # instance.specificities.add(new_data)
+            new_data = SpecificityModel.objects.get(specificity_name=item['specificity_name'])
+            instance.specificities.add(new_data)
         for item in tags:
-            # all_tags = TagModel.objects.all()
-            # new_tags = []
-            # for i in all_tags:
-            #     new_tags.append(i.tag_name)
-            # if item['tag_name'] not in new_tags:
-            #     data = TagModel.objects.create(**item)
-            #     instance.tags.add(data)
-            new_data = TagModel.objects.get(tag_name=item['tag_name'])
-            instance.tags.add(new_data)
+            all_tags = TagModel.objects.all()
+            new_tags = []
+            for i in all_tags:
+                new_tags.append(i.tag_name)
+            if item['tag_name'] not in new_tags:
+                data = TagModel.objects.create(**item)
+                instance.tags.add(data)
+            else:
+                new_data = TagModel.objects.get(tag_name=item['tag_name'])
+                instance.tags.add(new_data)
         ScheduleModel.objects.create(**schedule, place_id=instance.id)
         CoordinatesModel.objects.create(**coordinates, place_id=instance.id)
         return instance

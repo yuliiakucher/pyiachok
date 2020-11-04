@@ -47,3 +47,10 @@ class EditUserSerializer(serializers.ModelSerializer):
                         'email': {'required': False},
                         'profile': {'required': False},
                         }
+
+
+class FavPlaceSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PlaceModel
+        fields = ('name', 'id')
+

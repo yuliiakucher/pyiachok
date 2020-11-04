@@ -5,9 +5,9 @@ from rest_framework.generics import ListAPIView
 from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth.models import User
 from ..models import ProfileModel
-from .models import PlaceModel, TagModel, SpecificityModel, TypeModel
+from .models import PlaceModel, TagModel, SpecificityModel, TypeModel, ViewStatisticModel
 from .serializers import ShowPlaceSerializer, CreatePlaceSerializer, TagSerializer, TypeSerializer, \
-    SpecificitiesSerializer
+    SpecificitiesSerializer, EditPlaceSerializer
 
 
 class CreatePlaceView(APIView):
@@ -23,11 +23,25 @@ class CreatePlaceView(APIView):
         return Response({'message': 'Заявка на создание заведения успешно сформирована'}, status=201)
 
 
+class EditPlaceView(APIView):
+    """ URL place/place_id/edit/"""
+    # permission_classes = [IsAuthenticated]
+
+    @staticmethod
+    def patch(request, place_id):
+        place = PlaceModel.objects.get(id=place_id)
+        serializer = EditPlaceSerializer(place, data=request.data)
+        if not serializer.is_valid():
+            return Response({'message': 'Укажите корректные данные'}, status=400)
+        serializer.save()
+        return Response({'message': 'Изменения успешно сохранены'}, status=200)
+
+
 class ShowAllPlaces(APIView):
     """place/all"""
+
     @staticmethod
     def get(request):
-
         tag = request.query_params.get('tag', None)
         if tag:
             filtered_places = PlaceModel.objects.filter(tags__tag_name=tag).all()
@@ -46,6 +60,8 @@ class ShowPlaceView(APIView):
         serializer = ShowPlaceSerializer(place)
         place.statistic_views += 1
         place.save()
+        view = ViewStatisticModel.objects.create(place=place)
+        view.save()
         return Response(serializer.data)
 
 
@@ -78,5 +94,22 @@ class AddAdminView(APIView):
 
         place.save()
         return Response({'message': 'Админ успешно добавлен'}, status=200)
+
+
+class AddPlaceToFavourites(APIView):
+    """place/<place_id>/add-to-fave/"""
+    permission_classes = [IsAuthenticated]
+
+    @staticmethod
+    def put(request, place_id):
+        place = PlaceModel.objects.get(id=place_id)
+        user = request.user
+        user.favourites_places.add(place)
+        user.save()
+        return Response({'message': 'Заведение добавлено в избранное'}, status=200)
+
+
+
+
 
 

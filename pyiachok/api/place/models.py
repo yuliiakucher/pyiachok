@@ -85,3 +85,11 @@ class ScheduleModel(models.Model):
     sunday = models.CharField(max_length=8)
 
     place = models.OneToOneField(PlaceModel, on_delete=models.CASCADE, related_name='schedule')
+
+
+class ViewStatisticModel(models.Model):
+    class Meta:
+        db_table = 'views'
+
+    date = models.DateTimeField(auto_now=True)
+    place = models.ForeignKey(PlaceModel, on_delete=models.CASCADE, related_name='views')
