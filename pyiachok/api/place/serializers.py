@@ -51,19 +51,13 @@ class ShowPlaceSerializer(serializers.ModelSerializer):
 
 
 class EditPlaceSerializer(serializers.ModelSerializer):
-    type = TypeSerializer(required=False)
-    schedule = ScheduleSerializer(required=False)
-    coordinates = CoordinatesSerializer(required=False)
+    type = TypeSerializer(required=False, read_only=True)
+    schedule = ScheduleSerializer(required=False, read_only=True)
+    # coordinates = CoordinatesSerializer(required=False, read_only=True)
 
     class Meta:
         model = PlaceModel
-        fields = ('name', 'email', 'address', 'contacts', 'type', 'schedule', 'coordinates')
-        extra_kwargs = {
-            'name': {'required': False},
-            'email': {'required': False},
-            'address': {'required': False},
-            'contacts': {'required': False},
-            }
+        fields = ('name', 'email', 'address', 'contacts', 'type', 'schedule')
 
 
 class CreatePlaceSerializer(serializers.ModelSerializer):

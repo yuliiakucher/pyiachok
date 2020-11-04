@@ -5,9 +5,9 @@ from rest_framework.generics import ListAPIView
 from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth.models import User
 from ..models import ProfileModel
-from .models import PlaceModel, TagModel, SpecificityModel, TypeModel, ViewStatisticModel
+from .models import PlaceModel, TagModel, SpecificityModel, TypeModel, ViewStatisticModel, CoordinatesModel
 from .serializers import ShowPlaceSerializer, CreatePlaceSerializer, TagSerializer, TypeSerializer, \
-    SpecificitiesSerializer, EditPlaceSerializer
+    SpecificitiesSerializer, EditPlaceSerializer, CoordinatesSerializer
 
 
 class CreatePlaceView(APIView):
@@ -25,12 +25,21 @@ class CreatePlaceView(APIView):
 
 class EditPlaceView(APIView):
     """ URL place/place_id/edit/"""
+
     # permission_classes = [IsAuthenticated]
 
     @staticmethod
     def patch(request, place_id):
         place = PlaceModel.objects.get(id=place_id)
-        serializer = EditPlaceSerializer(place, data=request.data)
+        data = request.data
+        if 'coordinates' in request.data:
+            coordinates = data.pop('coordinates')
+            place_coordinates = CoordinatesModel.objects.filter(place=place).first()
+            serializer = CoordinatesSerializer(place_coordinates, data=coordinates)
+            if not serializer.is_valid():
+                return Response({'message': 'Укажите корректные данные'}, status=400)
+            serializer.save()
+        serializer = EditPlaceSerializer(place, data=request.data, partial=True)
         if not serializer.is_valid():
             return Response({'message': 'Укажите корректные данные'}, status=400)
         serializer.save()
@@ -38,7 +47,7 @@ class EditPlaceView(APIView):
 
 
 class ShowAllPlaces(APIView):
-    """place/all"""
+    """URL place/all"""
 
     @staticmethod
     def get(request):
@@ -80,7 +89,7 @@ class AllAdditionalInfoView(APIView):
 
 
 class AddAdminView(APIView):
-    """"place/place_id/add-admin"""
+    """"URL place/place_id/add-admin"""
     permission_classes = [IsAuthenticated]
 
     @staticmethod
@@ -97,7 +106,7 @@ class AddAdminView(APIView):
 
 
 class AddPlaceToFavourites(APIView):
-    """place/<place_id>/add-to-fave/"""
+    """URL place/<place_id>/add-to-fave/"""
     permission_classes = [IsAuthenticated]
 
     @staticmethod
@@ -109,7 +118,9 @@ class AddPlaceToFavourites(APIView):
         return Response({'message': 'Заведение добавлено в избранное'}, status=200)
 
 
-
-
-
-
+# class CreateSpecificityView(APIView):
+#     """URL specificity/create"""
+#     permission_classes = [IsAuthenticated]
+#
+#     @staticmethod
+#     def post(reque):
