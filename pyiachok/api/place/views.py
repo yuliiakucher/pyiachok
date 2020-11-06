@@ -118,9 +118,89 @@ class AddPlaceToFavourites(APIView):
         return Response({'message': 'Заведение добавлено в избранное'}, status=200)
 
 
-# class CreateSpecificityView(APIView):
-#     """URL specificity/create"""
-#     permission_classes = [IsAuthenticated]
-#
-#     @staticmethod
-#     def post(reque):
+class CreateSpecificityView(APIView):
+    """URL specificity/create"""
+
+    permission_classes = [IsAuthenticated]
+
+    @staticmethod
+    def post(request):
+        serializer = SpecificitiesSerializer(data=request.data)
+        if not serializer.is_valid():
+            return Response({'message': 'Укажите корректные данные'}, status=400)
+        data = SpecificityModel(**serializer.data)
+        data.save()
+        return Response({'message': 'Особенность сохранена'}, 201)
+
+
+class AddSpecificityView(APIView):
+    """URL place/<place_id>/spec-add/<spec_id>"""
+    permission_classes = [IsAuthenticated]
+
+    @staticmethod
+    def put(request, place_id, spec_id):
+        place = PlaceModel.objects.filter(id=place_id).first()
+        spec = SpecificityModel.objects.filter(id=spec_id).first()
+        if PlaceModel.objects.filter(admins=request.user, id=place_id).first() is None:
+            return Response({'message', 'У вас нет доступа'}, 400)
+        place.specificities.add(spec)
+        place.save()
+        return Response({'message': 'Особенность добавлена'}, 200)
+
+
+class DeleteSpecificityView(APIView):
+    """URL place/<place_id>/specificity/<spec_id>/delete"""
+    permission_classes = [IsAuthenticated]
+
+    @staticmethod
+    def delete(request, place_id, spec_id):
+        place = PlaceModel.objects.filter(id=place_id).first()
+        if PlaceModel.objects.filter(admins=request.user, id=place_id).first() is None:
+            return Response({'message', 'У вас нет доступа'}, 400)
+        place.specificities.remove(spec_id)
+        place.save()
+        return Response({'message': 'Особенность удалена'}, 200)
+
+
+class CreateTagView(APIView):
+    """URL tag/create"""
+
+    permission_classes = [IsAuthenticated]
+
+    @staticmethod
+    def post(request):
+        serializer = TagSerializer(data=request.data)
+        if not serializer.is_valid():
+            return Response({'message': 'Укажите корректные данные'}, status=400)
+        data = TagModel(**serializer.data)
+        data.save()
+        return Response({'message': 'Тэг сохранен'}, 201)
+
+
+class AddTagView(APIView):
+    """URL place/<place_id>/tag-add/<spec_id>"""
+    permission_classes = [IsAuthenticated]
+
+    @staticmethod
+    def put(request, place_id, tag_id):
+        place = PlaceModel.objects.filter(id=place_id).first()
+        tag = TagModel.objects.filter(id=tag_id).first()
+        if PlaceModel.objects.filter(admins=request.user, id=place_id).first() is None:
+            return Response({'message', 'У вас нет доступа'}, 400)
+        place.tags.add(tag)
+        place.save()
+        return Response({'message': 'Тэг добавлена'}, 200)
+
+
+class DeleteTagView(APIView):
+    """URL place/<place_id>/tag/<tag_id>/delete"""
+    permission_classes = [IsAuthenticated]
+
+    @staticmethod
+    def delete(request, place_id, tag_id):
+        place = PlaceModel.objects.filter(id=place_id).first()
+        if PlaceModel.objects.filter(admins=request.user, id=place_id).first() is None:
+            return Response({'message', 'У вас нет доступа'}, 400)
+        place.tags.remove(tag_id)
+        place.save()
+        return Response({'message': 'Тэг удален'}, 200)

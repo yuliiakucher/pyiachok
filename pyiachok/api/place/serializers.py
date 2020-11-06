@@ -12,6 +12,7 @@ class SpecificitiesSerializer(serializers.ModelSerializer):
     class Meta:
         model = SpecificityModel
         fields = ('id', 'specificity_name',)
+        # extra_kwargs = {'id': {'required': False}}
 
 
 class TypeSerializer(serializers.ModelSerializer):
