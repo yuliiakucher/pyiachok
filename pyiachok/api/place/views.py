@@ -1,10 +1,7 @@
-from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework.generics import ListAPIView
 from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth.models import User
-from ..models import ProfileModel
 from .models import PlaceModel, TagModel, SpecificityModel, TypeModel, ViewStatisticModel, CoordinatesModel
 from .serializers import ShowPlaceSerializer, CreatePlaceSerializer, TagSerializer, TypeSerializer, \
     SpecificitiesSerializer, EditPlaceSerializer, CoordinatesSerializer
@@ -52,18 +49,63 @@ class ShowAllPlaces(APIView):
     @staticmethod
     def get(request):
         tag = request.query_params.get('tag', None)
-        top = request.query_params.get('top', None)
+        spec = request.query_params.get('spec', None)
+        place_type = request.query_params.get('type', None)
+        page = request.query_params.get('page', None)
+        rate = request.query_params.get('rate', None)
+        sort_abc = request.query_params.get('sort_abc', None)
+        negative = int(request.query_params.get('negative', False))
+        index = int(page) * 10 - 10
         if tag:
-            filtered_places = PlaceModel.objects.filter(tags__tag_name=tag).all()
+            filtered_places = PlaceModel.objects.filter(tags=tag).all()[index: index + 10]
             filtered_serializer = ShowPlaceSerializer(filtered_places, many=True)
             return Response(filtered_serializer.data)
-        elif top:
-            filtered_places = PlaceModel.objects.order_by('statistic_views').all()[:10]
+        elif spec:
+            filtered_places = PlaceModel.objects.filter(specificities=spec).all()[index: index + 10]
+            filtered_serializer = ShowPlaceSerializer(filtered_places, many=True)
+            return Response(filtered_serializer.data)
+        elif place_type:
+            filtered_places = PlaceModel.objects.filter(type=place_type).all()[index: index + 10]
+            filtered_serializer = ShowPlaceSerializer(filtered_places, many=True)
+            return Response(filtered_serializer.data)
+        elif rate:
+            filtered_places = PlaceModel.objects.filter(type=place_type).all()[index: index + 10]
+            filtered_serializer = ShowPlaceSerializer(filtered_places, many=True)
+            return Response(filtered_serializer.data)
+        elif sort_abc:
+            if negative:
+                filtered_places = PlaceModel.objects.order_by('-name').all()[index: index + 10]
+            else:
+                filtered_places = PlaceModel.objects.order_by('name').all()[index: index + 10]
             filtered_serializer = ShowPlaceSerializer(filtered_places, many=True)
             return Response(filtered_serializer.data)
         places = PlaceModel.objects.all()
         serializer = ShowPlaceSerializer(places, many=True)
         return Response(serializer.data)
+
+
+class SearchPlaceByName(APIView):
+    """URL place/search"""
+
+    @staticmethod
+    def get(request):
+        name = request.query_params.get('name', None)
+        place = PlaceModel.objects.filter(name__istartswith=name).first()
+        if not place:
+            return Response({'message': 'По вашему запросу ничего не найдено'}, status=400)
+        serializer = ShowPlaceSerializer(place)
+        return Response(serializer.data)
+
+
+class ShowTopPlacesView(APIView):
+    """URl place/top"""
+
+    @staticmethod
+    def get(request):
+        top = request.query_params.get('top', None)
+        filtered_places = PlaceModel.objects.order_by('statistic_views').all()[:10]
+        filtered_serializer = ShowPlaceSerializer(filtered_places, many=True)
+        return Response(filtered_serializer.data)
 
 
 class ShowPlaceView(APIView):

@@ -20,6 +20,20 @@ class CreatePyiachokView(APIView):
         return Response({'message': 'Пиячок успешно создан'}, status=201)
 
 
+class DeletePyiachokView(APIView):
+    """URL event/<event_id>/delete/"""
+    permission_classes = [IsAuthenticated]
+
+    @staticmethod
+    def delete(request, event_id):
+        event = PyiachokModel.objects.filter(id=event_id).first()
+        print(event.creator)
+        if not event or event.creator != request.user:
+            return Response({'message': 'У вас нет доступа'}, status=400)
+        event.delete()
+        return Response({'message': 'Пиячок удален'}, status=200)
+
+
 class ShowPyiachokView(APIView):
     permission_classes = [IsAuthenticated]
 

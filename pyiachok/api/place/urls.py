@@ -1,7 +1,7 @@
 from django.urls import path
 from .views import ShowPlaceView, CreatePlaceView, AllAdditionalInfoView, ShowAllPlaces, AddAdminView, \
     AddPlaceToFavourites, EditPlaceView, CreateSpecificityView, CreateTagView, DeleteSpecificityView, DeleteTagView, \
-    AddSpecificityView, AddTagView
+    AddSpecificityView, AddTagView, SearchPlaceByName
 
 urlpatterns = [
     path('place/<int:pk>/', ShowPlaceView.as_view()),
@@ -17,4 +17,5 @@ urlpatterns = [
     path('place/<int:place_id>/tag/<int:tag_id>/delete', DeleteTagView.as_view()),
     path('place/<int:place_id>/spec-add/<int:spec_id>/', AddSpecificityView.as_view()),
     path('place/<int:place_id>/tag-add/<int:tag_id>/', AddTagView.as_view()),
+    path('place/search/', SearchPlaceByName.as_view()),
 ]
