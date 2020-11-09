@@ -9,11 +9,20 @@ class NewsTypeSerializer(serializers.ModelSerializer):
 
 
 class CreateNewsSerializer(serializers.ModelSerializer):
+    # type = NewsTypeSerializer()
+
+    class Meta:
+        model = NewsModel
+        exclude = ('id', 'place_id', 'type')
+
+
+class ShowTopNewsSerializer(serializers.ModelSerializer):
     type = NewsTypeSerializer(read_only=True)
 
     class Meta:
         model = NewsModel
-        exclude = ('id', 'place_id')
+        fields = ('name', 'text', 'type', 'id')
+        extra_kwargs = {'photo': {'required': False}}
 
 
 

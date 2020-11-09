@@ -52,8 +52,13 @@ class ShowAllPlaces(APIView):
     @staticmethod
     def get(request):
         tag = request.query_params.get('tag', None)
+        top = request.query_params.get('top', None)
         if tag:
             filtered_places = PlaceModel.objects.filter(tags__tag_name=tag).all()
+            filtered_serializer = ShowPlaceSerializer(filtered_places, many=True)
+            return Response(filtered_serializer.data)
+        elif top:
+            filtered_places = PlaceModel.objects.order_by('statistic_views').all()[:10]
             filtered_serializer = ShowPlaceSerializer(filtered_places, many=True)
             return Response(filtered_serializer.data)
         places = PlaceModel.objects.all()

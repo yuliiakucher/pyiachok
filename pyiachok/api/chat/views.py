@@ -39,7 +39,7 @@ class EditMessageView(APIView):
     def patch(request, msg_id):
         message = ChatCommentModel.objects.get(id=msg_id)
         serializer = EditMessageSerializer(message, data=request.data)
-        if not serializer.is_valid():
+        if not serializer.is_valid() or message.users_id != request.user.id:
             return Response({'message': 'Укажите корректные данные'}, status=400)
         message.edited = True
         message.save()

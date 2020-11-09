@@ -18,6 +18,35 @@ class CreateCommentView(APIView):
         return Response({'message': 'Комментарий отправлен'}, status=201)
 
 
+class EditCommentView(APIView):
+    """URl comment/<comment_id>/edit"""
+    permission_classes = [IsAuthenticated]
+
+    @staticmethod
+    def patch(request, comment_id):
+        comment = CommentModel.objects.filter(id=comment_id).first()
+        serializer = CreateCommentSerializer(comment, data=request.data)
+        if not serializer.is_valid() or comment.user_id != request.user.id:
+            return Response({'message': 'Укажите корректные данные'}, status=400)
+        comment.save()
+        serializer.save()
+        return Response({'message': 'Комментарий отредактирован'}, status=200)
+
+
+class DeleteCommentView(APIView):
+    """URl comment/<comment_id>/delete"""
+    permission_classes = [IsAuthenticated]
+
+    @staticmethod
+    def delete(request, comment_id):
+        comment = CommentModel.objects.filter(id=comment_id).first()
+        if not comment or comment.user_id != request.user.id:
+            return Response({'message': 'У вас нет доступа'}, status=400)
+        comment.delete()
+        return Response({'message': 'Комментарий удален'}, status=200)
+
+
+
 class ShowCommentsView(APIView):
     @staticmethod
     def get(request, pk):
