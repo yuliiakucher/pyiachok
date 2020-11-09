@@ -16,3 +16,4 @@ class PyiachokModel(models.Model):
     expenditures = models.IntegerField()
     participants = models.ManyToManyField(User, related_name='active_pyiachky')
     place_id = models.ForeignKey(PlaceModel, on_delete=models.CASCADE, related_name='pyiachky')
+    creator = models.ForeignKey(User, related_name='owned_pyiachky', on_delete=models.CASCADE)

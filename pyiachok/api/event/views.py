@@ -14,7 +14,7 @@ class CreatePyiachokView(APIView):
         serializer = CreatePyiachokSerializer(data=request.data)
         if not serializer.is_valid():
             return Response({'message': 'Укажите корректные данные'}, status=400)
-        new_event = PyiachokModel.objects.create(**serializer.data, place_id_id=pk)
+        new_event = PyiachokModel.objects.create(**serializer.data, place_id_id=pk, creator=request.user)
         new_event.participants.add(request.user)
         new_event.save()
         return Response({'message': 'Пиячок успешно создан'}, status=201)
@@ -44,6 +44,7 @@ class ShowPyiachokView(APIView):
 
 class ShowAllPyiachokView(APIView):
     """event/all"""
+
     @staticmethod
     def get(request):
         pyiachoks = PyiachokModel.objects.all()
