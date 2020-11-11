@@ -1,10 +1,11 @@
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from django.db.models import Avg
 from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth.models import User
 from .models import PlaceModel, TagModel, SpecificityModel, TypeModel, ViewStatisticModel, CoordinatesModel
 from .serializers import ShowPlaceSerializer, CreatePlaceSerializer, TagSerializer, TypeSerializer, \
-    SpecificitiesSerializer, EditPlaceSerializer, CoordinatesSerializer
+    SpecificitiesSerializer, EditPlaceSerializer, CoordinatesSerializer, RateSerializer
 
 
 class CreatePlaceView(APIView):
@@ -69,8 +70,8 @@ class ShowAllPlaces(APIView):
             filtered_serializer = ShowPlaceSerializer(filtered_places, many=True)
             return Response(filtered_serializer.data)
         elif rate:
-            filtered_places = PlaceModel.objects.filter(type=place_type).all()[index: index + 10]
-            filtered_serializer = ShowPlaceSerializer(filtered_places, many=True)
+            filtered_places = PlaceModel.objects.annotate(rate=Avg('comments__rate')).order_by('-rate').all()[index: index+11]
+            filtered_serializer = RateSerializer(filtered_places, many=True)
             return Response(filtered_serializer.data)
         elif sort_abc:
             if negative:
@@ -79,7 +80,7 @@ class ShowAllPlaces(APIView):
                 filtered_places = PlaceModel.objects.order_by('name').all()[index: index + 10]
             filtered_serializer = ShowPlaceSerializer(filtered_places, many=True)
             return Response(filtered_serializer.data)
-        places = PlaceModel.objects.all()
+        places = PlaceModel.objects.all()[index: index + 11]
         serializer = ShowPlaceSerializer(places, many=True)
         return Response(serializer.data)
 

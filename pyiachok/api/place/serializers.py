@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from rest_framework.serializers import IntegerField
 from .models import PlaceModel, TagModel, SpecificityModel, ScheduleModel, CoordinatesModel, TypeModel, PhotoModel
 
 
@@ -122,3 +123,11 @@ class CreatePlaceSerializer(serializers.ModelSerializer):
         ScheduleModel.objects.create(**schedule, place_id=instance.id)
         CoordinatesModel.objects.create(**coordinates, place_id=instance.id)
         return instance
+
+
+class RateSerializer(serializers.ModelSerializer):
+    rate = IntegerField()
+
+    class Meta:
+        model = PlaceModel
+        fields = ('id', 'name', 'rate')
