@@ -10,6 +10,7 @@ class ShowProfileSerializer(serializers.ModelSerializer):
         # fields = ('photo', 'owned_places')
         fields = ('photo', )
 
+
 class EditProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProfileModel

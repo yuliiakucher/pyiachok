@@ -59,30 +59,37 @@ class ShowAllPlaces(APIView):
         index = int(page) * 10 - 10
         if tag:
             filtered_places = PlaceModel.objects.filter(tags=tag).all()[index: index + 10]
+            count = PlaceModel.objects.filter(tags=tag).all().count()
             filtered_serializer = ShowPlaceSerializer(filtered_places, many=True)
-            return Response(filtered_serializer.data)
+            return Response({'data': filtered_serializer.data, 'count': count})
         elif spec:
             filtered_places = PlaceModel.objects.filter(specificities=spec).all()[index: index + 10]
+            count = PlaceModel.objects.filter(specificities=spec).all().count()
             filtered_serializer = ShowPlaceSerializer(filtered_places, many=True)
-            return Response(filtered_serializer.data)
+            return Response({'data': filtered_serializer.data, 'count': count})
         elif place_type:
             filtered_places = PlaceModel.objects.filter(type=place_type).all()[index: index + 10]
+            count = PlaceModel.objects.filter(type=place_type).all().count()
             filtered_serializer = ShowPlaceSerializer(filtered_places, many=True)
-            return Response(filtered_serializer.data)
+            return Response({'data': filtered_serializer.data, 'count': count})
         elif rate:
-            filtered_places = PlaceModel.objects.annotate(rate=Avg('comments__rate')).order_by('-rate').all()[index: index+11]
+            filtered_places = PlaceModel.objects.annotate(rate=Avg('comments__rate')).order_by('-rate').all()[
+                              index: index + 11]
+            count = PlaceModel.objects.annotate(rate=Avg('comments__rate')).order_by('-rate').all().count()
             filtered_serializer = RateSerializer(filtered_places, many=True)
-            return Response(filtered_serializer.data)
+            return Response({'data': filtered_serializer.data, 'count': count})
         elif sort_abc:
             if negative:
                 filtered_places = PlaceModel.objects.order_by('-name').all()[index: index + 10]
             else:
                 filtered_places = PlaceModel.objects.order_by('name').all()[index: index + 10]
+            count = PlaceModel.objects.order_by('-name').all().count()
             filtered_serializer = ShowPlaceSerializer(filtered_places, many=True)
-            return Response(filtered_serializer.data)
+            return Response({'data': filtered_serializer.data, 'count': count})
         places = PlaceModel.objects.all()[index: index + 11]
+        count = PlaceModel.objects.all().count()
         serializer = ShowPlaceSerializer(places, many=True)
-        return Response(serializer.data)
+        return Response({'data': serializer.data, 'count': count})
 
 
 class SearchPlaceByName(APIView):
