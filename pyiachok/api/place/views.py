@@ -23,18 +23,18 @@ class CreatePlaceView(APIView):
 
 
 class AddPhotoView(APIView):
+    permission_classes = [IsAuthenticated]
     """URL place/<place_id>/add-photo/"""
     @staticmethod
     def post(request, place_id):
         place = PlaceModel.objects.filter(id=place_id).first()
-        print(request.FILES['photo'])
-        # serializer = PhotoSerializer(data=request.FILES)
-        # if not serializer.is_valid() or not place:
-        #     return Response({'message': 'Укажите корректные данные'}, status=400)
-        # print(serializer.)
-        photo = PhotoModel.objects.create(places=place, photo=request.FILES['photo'])
-        print(photo)
-        place.photos.add(photo)
+        print(request.FILES)
+        serializer = PhotoSerializer(data=request.FILES)
+        if not serializer.is_valid() or not place:
+            return Response({'message': 'Укажите корректные данные'}, status=400)
+        elif PlaceModel.objects.filter(admins=request.user, id=place_id).first() is None:
+            return Response({'message': 'У Вас нет доступа'}, status=400)
+        serializer.save(places=place)
         return Response({'message': 'Фото успешно добавлено'}, status=200)
 
 

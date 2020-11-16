@@ -32,6 +32,7 @@ class PlaceSerializer(serializers.ModelSerializer):
 class ShowUserSerializer(serializers.ModelSerializer):
     profile = ShowProfileSerializer()
 
+
     class Meta:
         model = User
         fields = ('first_name', 'last_name', 'email', 'profile')
