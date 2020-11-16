@@ -34,6 +34,12 @@ class CoordinatesSerializer(serializers.ModelSerializer):
         fields = ('lat', 'lng')
 
 
+class PhotoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PhotoModel
+        fields = ('photo',)
+
+
 class ShowPlaceSerializer(serializers.ModelSerializer):
     tags = TagSerializer(many=True)
     specificities = SpecificitiesSerializer(many=True)
@@ -55,6 +61,7 @@ class ShowPlaceSerializer(serializers.ModelSerializer):
 class EditPlaceSerializer(serializers.ModelSerializer):
     type = TypeSerializer(required=False, read_only=True)
     schedule = ScheduleSerializer(required=False, read_only=True)
+
     # coordinates = CoordinatesSerializer(required=False, read_only=True)
 
     class Meta:
@@ -68,6 +75,7 @@ class CreatePlaceSerializer(serializers.ModelSerializer):
     type = TypeSerializer()
     schedule = ScheduleSerializer()
     coordinates = CoordinatesSerializer()
+    photos = PhotoSerializer()
 
     class Meta:
         model = PlaceModel
@@ -85,6 +93,8 @@ class CreatePlaceSerializer(serializers.ModelSerializer):
         tags = validated_data.pop('tags', [])
         schedule = validated_data.pop('schedule')
         coordinates = validated_data.pop('coordinates')
+        photos = validated_data.pop('photos')
+        print(photos)
         exist = TypeModel.objects.filter(type_name__iexact=type['type_name']).first()
         creating_type = exist if exist else TypeModel.objects.create(**type)
         if exist:

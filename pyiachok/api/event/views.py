@@ -64,3 +64,14 @@ class ShowAllPyiachokView(APIView):
         pyiachoks = PyiachokModel.objects.all()
         serialiser = ShowPyiachokSerializer(pyiachoks, many=True)
         return Response(serialiser.data)
+
+
+class ShowAllEventsByPlace(APIView):
+    """URL place/<place_id>/events"""
+
+    @staticmethod
+    def get(request, place_id):
+        place = PlaceModel.objects.filter(id=place_id).first()
+        pyiachoks = PyiachokModel.objects.filter(place_id=place)
+        serialiser = ShowPyiachokSerializer(pyiachoks, many=True)
+        return Response(serialiser.data)

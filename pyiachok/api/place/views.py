@@ -3,9 +3,10 @@ from rest_framework.views import APIView
 from django.db.models import Avg
 from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth.models import User
-from .models import PlaceModel, TagModel, SpecificityModel, TypeModel, ViewStatisticModel, CoordinatesModel
+from .models import PlaceModel, TagModel, SpecificityModel, TypeModel, ViewStatisticModel, CoordinatesModel, PhotoModel
 from .serializers import ShowPlaceSerializer, CreatePlaceSerializer, TagSerializer, TypeSerializer, \
-    SpecificitiesSerializer, EditPlaceSerializer, CoordinatesSerializer, RateSerializer
+    SpecificitiesSerializer, EditPlaceSerializer, CoordinatesSerializer, RateSerializer, PhotoSerializer
+from ..comment.models import CommentModel
 
 
 class CreatePlaceView(APIView):
@@ -19,6 +20,22 @@ class CreatePlaceView(APIView):
         data.save()
 
         return Response({'message': 'Заявка на создание заведения успешно сформирована'}, status=201)
+
+
+class AddPhotoView(APIView):
+    """URL place/<place_id>/add-photo/"""
+    @staticmethod
+    def post(request, place_id):
+        place = PlaceModel.objects.filter(id=place_id).first()
+        print(request.FILES['photo'])
+        # serializer = PhotoSerializer(data=request.FILES)
+        # if not serializer.is_valid() or not place:
+        #     return Response({'message': 'Укажите корректные данные'}, status=400)
+        # print(serializer.)
+        photo = PhotoModel.objects.create(places=place, photo=request.FILES['photo'])
+        print(photo)
+        place.photos.add(photo)
+        return Response({'message': 'Фото успешно добавлено'}, status=200)
 
 
 class EditPlaceView(APIView):
@@ -121,12 +138,13 @@ class ShowPlaceView(APIView):
     @staticmethod
     def get(request, pk):
         place = PlaceModel.objects.get(id=pk)
+        rate = CommentModel.objects.filter(place=pk).aggregate(Avg('rate'))
         serializer = ShowPlaceSerializer(place)
         place.statistic_views += 1
         place.save()
         view = ViewStatisticModel.objects.create(place=place)
         view.save()
-        return Response(serializer.data)
+        return Response({'data': serializer.data, 'rate': rate})
 
 
 class AllAdditionalInfoView(APIView):
