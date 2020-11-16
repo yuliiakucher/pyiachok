@@ -13,8 +13,7 @@ class CreateCommentView(APIView):
         serializer = CreateCommentSerializer(data=request.data)
         if not serializer.is_valid():
             return Response({'message': 'Укажите корректные данные'}, status=400)
-        new_comment = CommentModel.objects.create(**serializer.data, place_id=pk, user_id=request.user.id)
-        new_comment.save()
+        serializer.save(place_id=pk, user_id=request.user.id)
         return Response({'message': 'Комментарий отправлен'}, status=201)
 
 
