@@ -1,5 +1,7 @@
 from rest_framework import serializers
 from .models import PyiachokModel
+from ..place.models import PlaceModel
+from ..user_profile.serializers import ShowUserSerializer
 
 
 class CreatePyiachokSerializer(serializers.ModelSerializer):
@@ -9,8 +11,17 @@ class CreatePyiachokSerializer(serializers.ModelSerializer):
                   'expenditures')
 
 
+class PlaceSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PlaceModel
+        fields = ('id', 'name',)
+
+
 class ShowPyiachokSerializer(serializers.ModelSerializer):
+    place_id = PlaceSerializer()
+    creator = ShowUserSerializer()
+    participants = ShowUserSerializer(many=True)
+
     class Meta:
         model = PyiachokModel
-        exclude = ('place_id', )
-
+        fields = '__all__'

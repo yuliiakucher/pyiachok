@@ -34,6 +34,8 @@ class TypeModel(models.Model):
         return self.type_name
 
 
+
+
 class PlaceModel(models.Model):
     class Meta:
         db_table = 'place'

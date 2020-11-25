@@ -38,8 +38,8 @@ class ShowPyiachokView(APIView):
     permission_classes = [IsAuthenticated]
 
     @staticmethod
-    def get(request, sk, pk):
-        chosen_event = PyiachokModel.objects.get(id=sk)
+    def get(request, sk):
+        chosen_event = PyiachokModel.objects.filter(id=sk).first()
         if not chosen_event:
             return Response({'message': 'Некорректные данные заведения или пиячка'}, status=400)
         serializer = ShowPyiachokSerializer(chosen_event)

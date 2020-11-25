@@ -15,3 +15,5 @@ class CommentModel(models.Model):
     rate = models.IntegerField(validators=[MaxValueValidator(10)])
     text = models.TextField(max_length=800)
     bill = models.ImageField(upload_to=os.path.join('comments', 'img'), default='')
+    date = models.DateTimeField(auto_now=True)
+

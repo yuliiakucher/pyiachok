@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from rest_framework.serializers import IntegerField
 from .models import PlaceModel, TagModel, SpecificityModel, ScheduleModel, CoordinatesModel, TypeModel, PhotoModel
+from ..comment.models import CommentModel
 
 
 class TagSerializer(serializers.ModelSerializer):
@@ -40,12 +41,19 @@ class PhotoSerializer(serializers.ModelSerializer):
         fields = ('photo',)
 
 
+# class CommentSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = CommentModel
+#         fields = ('rate',)
+
+
 class ShowPlaceSerializer(serializers.ModelSerializer):
     tags = TagSerializer(many=True)
     specificities = SpecificitiesSerializer(many=True)
     type = TypeSerializer()
     schedule = ScheduleSerializer()
     coordinates = CoordinatesSerializer()
+    photos = PhotoSerializer(many=True)
 
     class Meta:
         model = PlaceModel

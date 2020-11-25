@@ -25,6 +25,7 @@ class CreatePlaceView(APIView):
 class AddPhotoView(APIView):
     permission_classes = [IsAuthenticated]
     """URL place/<place_id>/add-photo/"""
+
     @staticmethod
     def post(request, place_id):
         place = PlaceModel.objects.filter(id=place_id).first()
@@ -127,9 +128,15 @@ class ShowTopPlacesView(APIView):
 
     @staticmethod
     def get(request):
-        top = request.query_params.get('top', None)
-        filtered_places = PlaceModel.objects.order_by('statistic_views').all()[:10]
+        filtered_places = PlaceModel.objects.order_by('-statistic_views').all()[:10]
+        rating = []
+        for place in filtered_places:
+            rate = CommentModel.objects.filter(place=place).aggregate(Avg('rate'))
+            rating.append(rate)
         filtered_serializer = ShowPlaceSerializer(filtered_places, many=True)
+        for item in filtered_serializer.data:
+            for jtem in range(10):
+                item['rating'] = rating[filtered_serializer.data.index(item)]['rate__avg']
         return Response(filtered_serializer.data)
 
 

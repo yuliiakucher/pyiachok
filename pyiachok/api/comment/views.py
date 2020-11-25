@@ -45,8 +45,8 @@ class DeleteCommentView(APIView):
         return Response({'message': 'Комментарий удален'}, status=200)
 
 
-
 class ShowCommentsView(APIView):
+    """URl place/<place_id>/show-comments"""
     @staticmethod
     def get(request, pk):
         comment = CommentModel.objects.filter(place_id=pk)

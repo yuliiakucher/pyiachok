@@ -3,7 +3,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 from .views import ShowPlaceView, CreatePlaceView, AllAdditionalInfoView, ShowAllPlaces, AddAdminView, \
     AddPlaceToFavourites, EditPlaceView, CreateSpecificityView, CreateTagView, DeleteSpecificityView, DeleteTagView, \
-    AddSpecificityView, AddTagView, SearchPlaceByName, AddPhotoView
+    AddSpecificityView, AddTagView, SearchPlaceByName, AddPhotoView, ShowTopPlacesView
 
 urlpatterns = [
     path('place/<int:pk>/', ShowPlaceView.as_view()),
@@ -21,4 +21,5 @@ urlpatterns = [
     path('place/<int:place_id>/tag-add/<int:tag_id>/', AddTagView.as_view()),
     path('place/search/', SearchPlaceByName.as_view()),
     path('place/<int:place_id>/add-photo/', AddPhotoView.as_view()),
+    path('place/top/', ShowTopPlacesView.as_view()),
 ]+static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

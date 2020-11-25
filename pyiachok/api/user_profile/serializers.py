@@ -8,7 +8,7 @@ class ShowProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProfileModel
         # fields = ('photo', 'owned_places')
-        fields = ('photo', )
+        fields = ('photo', 'sex')
 
 
 class EditProfileSerializer(serializers.ModelSerializer):
@@ -32,10 +32,9 @@ class PlaceSerializer(serializers.ModelSerializer):
 class ShowUserSerializer(serializers.ModelSerializer):
     profile = ShowProfileSerializer()
 
-
     class Meta:
         model = User
-        fields = ('first_name', 'last_name', 'email', 'profile')
+        fields = ('id', 'first_name', 'last_name', 'email', 'profile')
 
 
 class EditUserSerializer(serializers.ModelSerializer):
