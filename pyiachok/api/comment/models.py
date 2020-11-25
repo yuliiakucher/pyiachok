@@ -17,3 +17,4 @@ class CommentModel(models.Model):
     bill = models.ImageField(upload_to=os.path.join('comments', 'img'), default='')
     date = models.DateTimeField(auto_now=True)
 
+

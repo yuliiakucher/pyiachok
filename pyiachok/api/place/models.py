@@ -34,8 +34,6 @@ class TypeModel(models.Model):
         return self.type_name
 
 
-
-
 class PlaceModel(models.Model):
     class Meta:
         db_table = 'place'
@@ -52,6 +50,7 @@ class PlaceModel(models.Model):
     owner_id = models.ForeignKey(User, related_name='owned_places', on_delete=models.CASCADE)
     fav = models.ManyToManyField(User, related_name='favourites_places')
     admins = models.ManyToManyField(User, related_name='moderated_places')
+    rating = models.FloatField(default=None)
 
     def __str__(self):
         return self.name
