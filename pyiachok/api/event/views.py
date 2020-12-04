@@ -46,7 +46,7 @@ class ShowPyiachokView(APIView):
         return Response(serializer.data, status=200)
 
     @staticmethod
-    def patch(request, sk, pk):
+    def patch(request, sk):
         user = request.user
         event = PyiachokModel.objects.get(id=sk)
         if not event:
