@@ -36,6 +36,12 @@ class EditMessageView(APIView):
     permission_classes = [IsAuthenticated]
 
     @staticmethod
+    def get(request, msg_id):
+        message = ChatCommentModel.objects.filter(id=msg_id).first()
+        serializer = ShowMessageSerializer(message)
+        return Response(serializer.data, status=200)
+
+    @staticmethod
     def patch(request, msg_id):
         message = ChatCommentModel.objects.get(id=msg_id)
         serializer = EditMessageSerializer(message, data=request.data)
